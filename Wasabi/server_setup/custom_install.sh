@@ -1114,6 +1114,8 @@ function installCommon_getPass() {
 function indexer_configure() {
 
     common_logger -d "Configuring Wazuh indexer."
+    eval "mkdir /etc/wazuh-indexer/certs ${debug}"
+
     eval "export JAVA_HOME=/usr/share/wazuh-indexer/jdk/"
 
     # Configure JVM options for Wazuh indexer
@@ -1172,7 +1174,6 @@ function indexer_configure() {
     common_logger "Moving Certs"
 
 
-    eval "mkdir /etc/wazuh-indexer/certs ${debug}"
     eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem ${debug}"
     eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem ${debug}"
     eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/ ${debug}"
