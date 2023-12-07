@@ -808,6 +808,25 @@ function dashboard_changePort() {
     sed -i 's/server\.port: [0-9]\+$/server.port: '"${chosen_port}"'/' "$0"
     common_logger "Wazuh web interface port will be ${chosen_port}."
 }
+function common_curl() {
+
+    if [ -n "${curl_has_connrefused}" ]; then
+        eval "curl $@ --retry-connrefused"
+        e_code="${PIPESTATUS[0]}"
+    else
+        retries=0
+        eval "curl $@"
+        e_code="${PIPESTATUS[0]}"
+        while [ "${e_code}" -eq 7 ] && [ "${retries}" -ne 12 ]; do
+            retries=$((retries+1))
+            sleep 5
+            eval "curl $@"
+            e_code="${PIPESTATUS[0]}"
+        done
+    fi
+    return "${e_code}"
+
+}
 function installCommon_rollBack() {
 
     if [ -z "${uninstall}" ]; then
