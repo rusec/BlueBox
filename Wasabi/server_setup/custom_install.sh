@@ -1169,6 +1169,7 @@ function indexer_configure() {
     # fi
 
     # indexer_copyCertificates
+    common_logger -d "Moving Certs"
 
 
     eval "mkdir /etc/wazuh-indexer/certs"
@@ -1177,9 +1178,10 @@ function indexer_configure() {
     eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
     eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/"
-    eval "chmod 500 /etc/wazuh-indexer/certs"
-    eval "chmod 400 /etc/wazuh-indexer/certs/*"
+    eval "chmod 550 /etc/wazuh-indexer/certs"
+    eval "chmod 440 /etc/wazuh-indexer/certs/*"
     eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs"
+
 
 
 
@@ -1298,7 +1300,7 @@ function indexer_initialize() {
         exit 1
     fi
 
-    eval "sudo -u wazuh-indexer JAVA_HOME=/usr/share/wazuh-indexer/jdk/ OPENSEARCH_CONF_DIR=/etc/wazuh-indexer /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /etc/wazuh-indexer/opensearch-security -icl -p 9200 -nhnv -cacert ${indexer_cert_path}/root-ca.pem -cert ${indexer_cert_path}/admin.pem -key ${indexer_cert_path}/admin-key.pem -h 127.0.0.1 ${debug}"
+    # eval "sudo -u wazuh-indexer JAVA_HOME=/usr/share/wazuh-indexer/jdk/ OPENSEARCH_CONF_DIR=/etc/wazuh-indexer /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /etc/wazuh-indexer/opensearch-security -icl -p 9200 -nhnv -cacert ${indexer_cert_path}/root-ca.pem -cert ${indexer_cert_path}/admin.pem -key ${indexer_cert_path}/admin-key.pem -h 127.0.0.1 ${debug}"
     
 
 
