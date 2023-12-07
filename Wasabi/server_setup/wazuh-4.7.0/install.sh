@@ -44,12 +44,11 @@ for i in $*; do
     fi
 done
 
-##########
-# install()
-##########
-Install()
-{
-    echo ""
+#########
+# makeWazuh()
+#########
+makeWazuh(){
+ echo ""
     echo "4- ${installing}"
 
     echo ""
@@ -99,6 +98,18 @@ Install()
     # Makefile
     echo " - ${runningmake}"
     echo ""
+
+}
+
+
+
+
+##########
+# install()
+##########
+Install()
+{
+   #makeWazuh
 
     cd ./src
 
@@ -831,10 +842,10 @@ main()
     . ./src/init/inst-functions.sh
     . ./src/init/template-select.sh
 
-    # Must be executed as ./install.sh
-    if [ `isFile ${VERSION_FILE}` = "${FALSE}" ]; then
-        catError "0x1-location";
-    fi
+    # # Must be executed as ./install.sh
+    # if [ `isFile ${VERSION_FILE}` = "${FALSE}" ]; then
+    #     catError "0x1-location";
+    # fi
 
     # Must be root
     if [ ! "X$ME" = "Xroot" ]; then

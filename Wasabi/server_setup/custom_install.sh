@@ -1266,8 +1266,13 @@ function manager_install() {
     # fi
 
     # eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
-    eval "./wazuh-4.7.0/install.sh"
+
+    cd 'wazuh-4.7.0'
+
+    eval "./install.sh"
     install_result="${PIPESTATUS[0]}"
+    cd '..'
+
     common_checkInstalled
     if [  "$install_result" != 0  ] || [ -z "${wazuh_installed}" ]; then
         common_logger -e "Wazuh installation failed."
@@ -1741,6 +1746,7 @@ function dashboard_initializeAIO() {
 #     fi
 
 # }
+
 function main(){
 
     umask 177
@@ -1767,6 +1773,7 @@ function main(){
     installCommon_startService "wazuh-indexer"
     indexer_initialize
     common_logger "--- Wazuh server ---"
+    manager_install_deps
     manager_install
     installCommon_startService "wazuh-manager"
     filebeat_install
