@@ -922,61 +922,7 @@ function installCommon_rollBack() {
     fi
 
 }
-function installCommon_startService() {
 
-    if [ "$#" -ne 1 ]; then
-        common_logger -e "installCommon_startService must be called with 1 argument."
-        exit 1
-    fi
-
-    common_logger "Starting service ${1}."
-
-    if [[ -d /run/systemd/system ]]; then
-        eval "systemctl daemon-reload ${debug}"
-        eval "systemctl enable ${1}.service ${debug}"
-        eval "systemctl start ${1}.service ${debug}"
-        if [  "${PIPESTATUS[0]}" != 0  ]; then
-            common_logger -e "${1} could not be started."
-            if [ -n "$(command -v journalctl)" ]; then
-                eval "journalctl -u ${1} >> ${logfile}"
-            fi
-            installCommon_rollBack
-            exit 1
-        else
-            common_logger "${1} service started."
-        fi
-    elif ps -p 1 -o comm= | grep "init"; then
-        eval "chkconfig ${1} on ${debug}"
-        eval "service ${1} start ${debug}"
-        eval "/etc/init.d/${1} start ${debug}"
-        if [  "${PIPESTATUS[0]}" != 0  ]; then
-            common_logger -e "${1} could not be started."
-            if [ -n "$(command -v journalctl)" ]; then
-                eval "journalctl -u ${1} >> ${logfile}"
-            fi
-            installCommon_rollBack
-            exit 1
-        else
-            common_logger "${1} service started."
-        fi
-    elif [ -x "/etc/rc.d/init.d/${1}" ] ; then
-        eval "/etc/rc.d/init.d/${1} start ${debug}"
-        if [  "${PIPESTATUS[0]}" != 0  ]; then
-            common_logger -e "${1} could not be started."
-            if [ -n "$(command -v journalctl)" ]; then
-                eval "journalctl -u ${1} >> ${logfile}"
-            fi
-            installCommon_rollBack
-            exit 1
-        else
-            common_logger "${1} service started."
-        fi
-    else
-        common_logger -e "${1} could not start. No service manager found on the system."
-        exit 1
-    fi
-
-}
 function common_checkInstalled() {
 
     wazuh_installed=""
@@ -1773,7 +1719,6 @@ function main(){
     installCommon_startService "wazuh-indexer"
     indexer_initialize
     common_logger "--- Wazuh server ---"
-    manager_install_deps
     manager_install
     installCommon_startService "wazuh-manager"
     filebeat_install
