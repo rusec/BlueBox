@@ -1179,9 +1179,10 @@ function indexer_configure() {
     eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/ ${debug}"
     eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/ ${debug}"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/ ${debug}"
-    eval "chmod 650 /etc/wazuh-indexer/certs ${debug}"
-    eval "chmod 640 /etc/wazuh-indexer/certs/* ${debug}"
+    eval "chmod 500 /etc/wazuh-indexer/certs ${debug}"
+    eval "chmod 400 /etc/wazuh-indexer/certs/* ${debug}"
     eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs ${debug}"
+    eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs/* ${debug}"
 
   
     eval "ls -l /etc/wazuh-indexer/certs/ ${debug}"
