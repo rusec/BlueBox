@@ -1184,7 +1184,7 @@ function indexer_configure() {
     eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs ${debug}"
 
 
-
+    eval "ls -l etc/wazuh-indexer/certs/ ${debug}"
 
     jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
     if [ "$jv" == "1.8.0" ]; then
