@@ -1,0 +1,6 @@
+wazuh-offline filter=lfs diff=lfs merge=lfs -text
+wazuh-offline.tar.gz filter=lfs diff=lfs merge=lfs -text
+wazuh*.deb filter=lfs diff=lfs merge=lfs -text
+Wasabi/server_setup/wazuh-offline.tar.gz filter=lfs diff=lfs merge=lfs -text
+wazuh-filebeat-0.3.tar.gz filter=lfs diff=lfs merge=lfs -text
+wazuh*.tar.gz filter=lfs diff=lfs merge=lfs -text
