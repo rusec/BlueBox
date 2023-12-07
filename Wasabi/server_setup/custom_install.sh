@@ -845,7 +845,7 @@ function installCommon_rollBack() {
 
     if [[ -n "${wazuh_installed}" && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]];then
         common_logger "Removing Wazuh manager."
-        eval "dpkg --remove wazuh-manager"
+        eval "dpkg --remove --force-all wazuh-manager"
         common_logger "Wazuh manager removed."
     fi
 
@@ -856,7 +856,7 @@ function installCommon_rollBack() {
     if [[ -n "${indexer_installed}" && ( -n "${indexer}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         common_logger "Removing Wazuh indexer."
 
-        eval "dpkg --remove wazuh-indexer"
+        eval "dpkg --remove --force-all wazuh-indexer"
 
         common_logger "Wazuh indexer removed."
     fi
@@ -870,7 +870,7 @@ function installCommon_rollBack() {
     if [[ -n "${filebeat_installed}" && ( -n "${wazuh}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         common_logger "Removing Filebeat."
         
-        eval "dpkg --remove filebeat"
+        eval "dpkg --remove --force-all filebeat"
 
         common_logger "Filebeat removed."
     fi
@@ -884,7 +884,7 @@ function installCommon_rollBack() {
     if [[ -n "${dashboard_installed}" && ( -n "${dashboard}" || -n "${AIO}" || -n "${uninstall}" ) ]]; then
         common_logger "Removing Wazuh dashboard."
         
-        eval "dpkg --remove wazuh-dashboard"
+        eval "dpkg --remove --force-all wazuh-dashboard"
 
         common_logger "Wazuh dashboard removed."
     fi
@@ -1172,10 +1172,10 @@ function indexer_configure() {
 
 
     eval "mkdir /etc/wazuh-indexer/certs"
-    eval "mv -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
-    eval "mv -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
-    eval "mv wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
-    eval "mv wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
+    eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
+    eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
+    eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
+    eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/"
     eval "chmod 500 /etc/wazuh-indexer/certs"
     eval "chmod 400 /etc/wazuh-indexer/certs/*"
@@ -1298,9 +1298,8 @@ function indexer_initialize() {
         exit 1
     fi
 
-    if [ -n "${AIO}" ]; then
-        eval "sudo -u wazuh-indexer JAVA_HOME=/usr/share/wazuh-indexer/jdk/ OPENSEARCH_CONF_DIR=/etc/wazuh-indexer /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /etc/wazuh-indexer/opensearch-security -icl -p 9200 -nhnv -cacert ${indexer_cert_path}/root-ca.pem -cert ${indexer_cert_path}/admin.pem -key ${indexer_cert_path}/admin-key.pem -h 127.0.0.1 ${debug}"
-    fi
+    eval "sudo -u wazuh-indexer JAVA_HOME=/usr/share/wazuh-indexer/jdk/ OPENSEARCH_CONF_DIR=/etc/wazuh-indexer /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /etc/wazuh-indexer/opensearch-security -icl -p 9200 -nhnv -cacert ${indexer_cert_path}/root-ca.pem -cert ${indexer_cert_path}/admin.pem -key ${indexer_cert_path}/admin-key.pem -h 127.0.0.1 ${debug}"
+    
 
 
     common_logger "Wazuh indexer cluster initialized."
