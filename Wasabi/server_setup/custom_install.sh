@@ -1132,16 +1132,16 @@ function indexer_configure() {
 
     eval "ls -l /etc/wazuh-indexer/certs"
 
-    # jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
-    # if [ "$jv" == "1.8.0" ]; then
-    #     {
-    #     echo "wazuh-indexer hard nproc 4096"
-    #     echo "wazuh-indexer soft nproc 4096"
-    #     echo "wazuh-indexer hard nproc 4096"
-    #     echo "wazuh-indexer soft nproc 4096"
-    #     } >> /etc/security/limits.conf
-    #     echo -ne "\nbootstrap.system_call_filter: false" >> /etc/wazuh-indexer/opensearch.yml
-    # fi
+    jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
+    if [ "$jv" == "1.8.0" ]; then
+        {
+        echo "wazuh-indexer hard nproc 4096"
+        echo "wazuh-indexer soft nproc 4096"
+        echo "wazuh-indexer hard nproc 4096"
+        echo "wazuh-indexer soft nproc 4096"
+        } >> /etc/security/limits.conf
+        echo -ne "\nbootstrap.system_call_filter: false" >> /etc/wazuh-indexer/opensearch.yml
+    fi
 
     common_logger "Wazuh indexer post-install configuration finished."
 }
