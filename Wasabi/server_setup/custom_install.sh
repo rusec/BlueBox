@@ -1126,7 +1126,7 @@ function indexer_configure() {
     eval "sed -i "s/-Xms1g/-Xms${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
-    # eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
+    eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
 
     # if [ -n "${AIO}" ]; then
     #     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
@@ -1171,17 +1171,19 @@ function indexer_configure() {
     # indexer_copyCertificates
 
 
+    common_logger "Moving certs"
+
     eval "mkdir /etc/wazuh-indexer/certs"
-    eval "mv -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
-    eval "mv -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
-    eval "mv wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
-    eval "mv wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
+    eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
+    eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
+    eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
+    eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/"
     eval "chmod 500 /etc/wazuh-indexer/certs"
     eval "chmod 400 /etc/wazuh-indexer/certs/*"
     eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs"
 
-
+    eval "ls -l /etc/wazuh-indexer/certs"
 
     jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
     if [ "$jv" == "1.8.0" ]; then
