@@ -1,5 +1,0 @@
-eval "cat ./wazuh-packages/filebeat-oss-7.10.2-amd64* > ./wazuh-packages/filebeat-oss-7.10.2-amd64.deb"
-eval "cat ./wazuh-packages/wazuh-dashboard_4.7.0-1_amd64* > ./wazuh-packages/wazuh-dashboard_4.7.0-1_amd64.deb"
-eval "cat ./wazuh-packages/wazuh-indexer_4.7.0-1_amd64* > ./wazuh-packages/wazuh-indexer_4.7.0-1_amd64.deb"
-eval "cat ./wazuh-packages/wazuh-manager_4.7.0-1_amd64* > ./wazuh-packages/wazuh-manager_4.7.0-1_amd64.deb"
-eval "cat ./wazuh-files/wazuh-filebeat-0.3* > ./wazuh-files/wazuh-filebeat-0.3.tar.gz"
