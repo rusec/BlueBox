@@ -1024,7 +1024,7 @@ function indexer_install() {
     # fi
 
     eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-indexer*.deb"
-
+    install_result="${PIPESTATUS[0]}"
     common_checkInstalled
     if [  "$install_result" != 0  ] || [ -z "${indexer_installed}" ]; then
         common_logger -e "Wazuh indexer installation failed."
@@ -1242,8 +1242,8 @@ function manager_install() {
     #     installCommon_aptInstall "wazuh-manager" "${wazuh_version}-*"
     # fi
 
-    evel "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
-    
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
+    install_result="${PIPESTATUS[0]}"
     common_checkInstalled
     if [  "$install_result" != 0  ] || [ -z "${wazuh_installed}" ]; then
         common_logger -e "Wazuh installation failed."
@@ -1295,7 +1295,7 @@ function filebeat_install() {
     # elif [ "${sys_type}" == "apt-get" ]; then
     #     installCommon_aptInstall "filebeat" "${filebeat_version}"
     # fi
-    evel "dpkg -i ./wazuh-offline/wazuh-packages/filebeat*.deb"
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/filebeat*.deb"
     install_result="${PIPESTATUS[0]}"
     common_checkInstalled
     if [  "$install_result" != 0  ] || [ -z "${filebeat_installed}" ]; then
@@ -1376,7 +1376,7 @@ function dashboard_install() {
     # fi
 
     eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-dashboard*.deb"
-
+    install_result="${PIPESTATUS[0]}"
     
 
     common_checkInstalled
