@@ -1126,8 +1126,8 @@ function indexer_configure() {
     eval "echo "s/-Xms1g/-Xms${ram}m/" > /etc/wazuh-indexer/jvm.options"
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
-    
-    eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
+
+    # eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
 
     # if [ -n "${AIO}" ]; then
     #     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
@@ -1186,16 +1186,16 @@ function indexer_configure() {
 
     eval "ls -l /etc/wazuh-indexer/certs"
 
-    jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
-    if [ "$jv" == "1.8.0" ]; then
-        {
-        echo "wazuh-indexer hard nproc 4096"
-        echo "wazuh-indexer soft nproc 4096"
-        echo "wazuh-indexer hard nproc 4096"
-        echo "wazuh-indexer soft nproc 4096"
-        } >> /etc/security/limits.conf
-        echo -ne "\nbootstrap.system_call_filter: false" >> /etc/wazuh-indexer/opensearch.yml
-    fi
+    # jv=$(java -version 2>&1 | grep -o -m1 '1.8.0' )
+    # if [ "$jv" == "1.8.0" ]; then
+    #     {
+    #     echo "wazuh-indexer hard nproc 4096"
+    #     echo "wazuh-indexer soft nproc 4096"
+    #     echo "wazuh-indexer hard nproc 4096"
+    #     echo "wazuh-indexer soft nproc 4096"
+    #     } >> /etc/security/limits.conf
+    #     echo -ne "\nbootstrap.system_call_filter: false" >> /etc/wazuh-indexer/opensearch.yml
+    # fi
 
     common_logger "Wazuh indexer post-install configuration finished."
 }
@@ -1265,7 +1265,8 @@ function manager_install() {
     #     installCommon_aptInstall "wazuh-manager" "${wazuh_version}-*"
     # fi
 
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
+    # eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
+    eval "./wazuh-4.7.0/install.sh"
     install_result="${PIPESTATUS[0]}"
     common_checkInstalled
     if [  "$install_result" != 0  ] || [ -z "${wazuh_installed}" ]; then

@@ -1,5 +1,19 @@
-After running the custom_install script
+## Install 
 
+1. Run Step to depack
+
+    ```sh
+        chmod 700 ./setup.sh
+        ./setup.sh
+    ```
+    
+
+
+
+
+
+
+After running the custom_install script
 
 1. **Edit /etc/wazuh-indexer/opensearch.yml and replace the following values:**
     network.host: Sets the address of this node for both HTTP and transport traffic. The node will bind to this address and will also use it as its publish address. Accepts an IP address or a hostname.
