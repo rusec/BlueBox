@@ -1169,18 +1169,18 @@ function indexer_configure() {
     # fi
 
     # indexer_copyCertificates
-    common_logger -d "Moving Certs"
+    common_logger "Moving Certs"
 
 
-    eval "mkdir /etc/wazuh-indexer/certs"
-    eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
-    eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
-    eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
-    eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
-    eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/"
-    eval "chmod 550 /etc/wazuh-indexer/certs"
-    eval "chmod 440 /etc/wazuh-indexer/certs/*"
-    eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs"
+    eval "mkdir /etc/wazuh-indexer/certs ${debug}"
+    eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem ${debug}"
+    eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem ${debug}"
+    eval "cp wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/ ${debug}"
+    eval "cp wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/ ${debug}"
+    eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/ ${debug}"
+    eval "chmod 550 /etc/wazuh-indexer/certs ${debug}"
+    eval "chmod 440 /etc/wazuh-indexer/certs/* ${debug}"
+    eval "chown -R wazuh-indexer:wazuh-indexer /etc/wazuh-indexer/certs ${debug}"
 
 
 
