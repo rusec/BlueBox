@@ -1074,7 +1074,7 @@ function indexer_configure() {
 
 
     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
-
+    eval "chmod 600 /etc/wazuh-indexer/opensearch.yml"
     # if [ -n "${AIO}" ]; then
     #     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
     # else
