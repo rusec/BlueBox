@@ -1123,9 +1123,10 @@ function indexer_configure() {
     if [ "${ram}" -eq "0" ]; then
         ram=1024;
     fi
-    eval "sed -i "s/-Xms1g/-Xms${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
+    eval "echo "s/-Xms1g/-Xms${ram}m/" > /etc/wazuh-indexer/jvm.options"
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
+    
     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
 
     # if [ -n "${AIO}" ]; then

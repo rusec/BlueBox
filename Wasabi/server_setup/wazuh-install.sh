@@ -1487,7 +1487,7 @@ function indexer_configure() {
     if [ "${ram}" -eq "0" ]; then
         ram=1024;
     fi
-    eval "echo "s/-Xms1g/-Xms${ram}m/" > /etc/wazuh-indexer/jvm.options"
+    eval "sed -i "s/-Xms1g/-Xms${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
     if [ -n "${AIO}" ]; then
