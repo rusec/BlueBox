@@ -55,6 +55,7 @@ wazuh_aio_ports=( 9200 9300 1514 1515 1516 55000 "${http_port}")
 readonly wazuh_indexer_ports=( 9200 9300 )
 readonly wazuh_manager_ports=( 1514 1515 1516 55000 )
 wazuh_dashboard_port="${http_port}"
+NODE_NAME="node-1"
 
 config_file_certificate_config="nodes:
   # Wazuh indexer nodes
@@ -1152,8 +1153,8 @@ function indexer_configure() {
 
 
     eval "mkdir /etc/wazuh-indexer/certs"
-    eval "mv -n wazuh-certificates/$NODE_NAME.pem /etc/wazuh-indexer/certs/indexer.pem"
-    eval "mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-indexer/certs/indexer.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-indexer/certs/indexer-key.pem"
     eval "mv wazuh-certificates/admin-key.pem /etc/wazuh-indexer/certs/"
     eval "mv wazuh-certificates/admin.pem /etc/wazuh-indexer/certs/"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-indexer/certs/"
@@ -1355,8 +1356,8 @@ chmod go+r /etc/filebeat/wazuh-template.json"
     eval "tar -xzf ./wazuh-offline/wazuh-files/wazuh-filebeat-0.3.tar.gz -C /usr/share/filebeat/module"
 
     eval "mkdir /etc/filebeat/certs"
-    eval "mv -n wazuh-certificates/$NODE_NAME.pem /etc/filebeat/certs/filebeat.pem"
-    eval "mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/filebeat/certs/filebeat-key.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}.pem /etc/filebeat/certs/filebeat.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}-key.pem /etc/filebeat/certs/filebeat-key.pem"
     eval "cp wazuh-certificates/root-ca.pem /etc/filebeat/certs/"
     eval "chmod 500 /etc/filebeat/certs"
     eval "chmod 400 /etc/filebeat/certs/*"
@@ -1425,8 +1426,8 @@ function dashboard_configure() {
     #     fi
     # fi
     eval "mkdir /etc/wazuh-dashboard/certs"
-    eval "mv -n wazuh-certificates/$NODE_NAME.pem /etc/wazuh-dashboard/certs/dashboard.pem"
-    eval "mv -n wazuh-certificates/$NODE_NAME-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-dashboard/certs/dashboard.pem"
+    eval "mv -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem"
     eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-dashboard/certs/"
     eval "chmod 500 /etc/wazuh-dashboard/certs"
     eval "chmod 400 /etc/wazuh-dashboard/certs/*"
