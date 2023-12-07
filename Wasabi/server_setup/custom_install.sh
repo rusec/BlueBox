@@ -1069,7 +1069,7 @@ function indexer_configure() {
     if [ "${ram}" -eq "0" ]; then
         ram=1024;
     fi
-    eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
+    eval "echo "s/-Xmx1g/-Xmx${ram}m/" > /etc/wazuh-indexer/jvm.options"
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
 
