@@ -1073,8 +1073,8 @@ function indexer_configure() {
     eval "sed -i "s/-Xmx1g/-Xmx${ram}m/" /etc/wazuh-indexer/jvm.options ${debug}"
 
 
-    eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
-    eval "chmod 600 /etc/wazuh-indexer/opensearch.yml"
+    # eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
+    # eval "chmod 600 /etc/wazuh-indexer/opensearch.yml"
     # if [ -n "${AIO}" ]; then
     #     eval "installCommon_getConfig indexer/indexer_all_in_one.yml /etc/wazuh-indexer/opensearch.yml ${debug}"
     # else
