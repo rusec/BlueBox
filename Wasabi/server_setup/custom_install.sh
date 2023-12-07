@@ -797,6 +797,16 @@ function common_logger() {
     fi
 
 }
+function dashboard_changePort() {
+
+    chosen_port="$1"
+    http_port="${chosen_port}" 
+    wazuh_dashboard_ports=( "${http_port}" )
+    wazuh_aio_ports=(9200 9300 1514 1515 1516 55000 "${http_port}")
+
+    sed -i 's/server\.port: [0-9]\+$/server.port: '"${chosen_port}"'/' "$0"
+    common_logger "Wazuh web interface port will be ${chosen_port}."
+}
 function installCommon_rollBack() {
 
     if [ -z "${uninstall}" ]; then
@@ -1254,12 +1264,7 @@ function common_checkSystem() {
     fi
 
 }
-function passwords_readUsers() {
 
-    susers=$(grep -B 1 hash: /etc/wazuh-indexer/opensearch-security/internal_users.yml | grep -v hash: | grep -v "-" | awk '{ print substr( $0, 1, length($0)-1 ) }')
-    mapfile -t users <<< "${susers[@]}"
-
-}
 
 function indexer_initialize() {
 
@@ -1442,6 +1447,34 @@ function installCommon_changePasswords() {
 
 }
 
+function checks_ports() {
+
+    used_port=0
+    ports=("$@")
+
+    checks_firewall "${ports[@]}"
+
+    if command -v lsof > /dev/null; then
+        port_command="lsof -sTCP:LISTEN  -i:"
+    else
+        common_logger -w "Cannot find lsof. Port checking will be skipped."
+        return 1
+    fi
+
+    for i in "${!ports[@]}"; do
+        if eval "${port_command}""${ports[i]}" > /dev/null; then
+            used_port=1
+            common_logger -e "Port ${ports[i]} is being used by another process. Please, check it before installing Wazuh."
+        fi
+    done
+
+    if [ "${used_port}" -eq 1 ]; then
+        common_logger "The installation can not continue due to port usage by other processes."
+        installCommon_rollBack
+        exit 1
+    fi
+
+}
 function dashboard_initializeAIO() {
 
     common_logger "Initializing Wazuh dashboard web application."
@@ -1487,18 +1520,16 @@ function main(){
     cat /dev/null > "${logfile}"
 
 
-    if [ -n "${showVersion}" ]; then
-        
-        exit 0
-    fi
-
-
     common_logger "Starting Wazuh installation assistant. Wazuh version: ${wazuh_version}"
     common_logger "Verbose logging redirected to ${logfile}"
     common_logger "Wazuh version: ${wazuh_version}"
     common_logger "Filebeat version: ${filebeat_version}"
     common_logger "Wazuh installation assistant version: ${wazuh_install_vesion}"
     common_checkSystem
+
+    dashboard_changePort "${http_port}"
+
+    checks_ports "${wazuh_aio_ports[@]}"
     
     common_logger "--- Wazuh indexer ---"
     indexer_install
