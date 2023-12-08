@@ -57,7 +57,7 @@ function check(){
     DIR="./wazuh"
     if [ -d "$DIR" ]; then
         # Take action if $DIR exists. #
-        echo "decomplied dir check in ${DIR}..."
+        echo "Decompiled check complete in ${DIR}..."
     fi
     DIR="./comfig.yml"
     if [ -d "$DIR" ]; then
@@ -133,7 +133,7 @@ function install_indexer(){
 
     eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-indexer*.deb"
     install_result="${PIPESTATUS[0]}"
-    common_checkInstalled
+
     if [  "$install_result" != 0  ] || [ -z "${indexer_installed}" ]; then
         common_logger -e "Wazuh indexer installation failed."
         installCommon_rollBack
