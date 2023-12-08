@@ -133,6 +133,8 @@ function install_indexer(){
 
     eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-indexer*.deb"
     install_result="${PIPESTATUS[0]}"
+    
+    indexer_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-indexer)
 
     if [  "$install_result" != 0  ] || [ -z "${indexer_installed}" ]; then
         common_logger -e "Wazuh indexer installation failed."
