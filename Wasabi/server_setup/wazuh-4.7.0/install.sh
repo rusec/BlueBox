@@ -111,6 +111,8 @@ Install()
 {
    #makeWazuh
 
+   echo "INSTALLING WAZUH MANAGER"
+
     cd ./src
 
     # Binary install will use the previous generated code.
