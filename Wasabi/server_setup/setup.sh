@@ -208,8 +208,8 @@ function manager_install(){
     
     common_logger "Starting the Wazuh manager installation."
 
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
     eval "dpkg -i ./lsb-release*.deb"
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
     install_result="${PIPESTATUS[0]}"
 
 

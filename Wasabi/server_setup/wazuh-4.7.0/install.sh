@@ -785,26 +785,10 @@ main()
     fi
 
     # If user language is not set
-
     if [ "X${USER_LANGUAGE}" = "X" ]; then
 
         # Choosing the language.
-        while [ 1 ]; do
-        echo ""
-        for i in `ls ${TEMPLATE}`; do
-            # ignore CVS (should not be there anyways and config)
-            if [ "$i" = "CVS" -o "$i" = "config" ]; then continue; fi
-            cat "${TEMPLATE}/$i/language.txt"
-            if [ ! "$i" = "en" ]; then
-                LG="${LG}/$i"
-            fi
-        done
-        $ECHO "  (${LG}) [en]: "
-        read USER_LG;
-
-        if [ "X${USER_LG}" = "X" ]; then
-            USER_LG="en"
-        fi
+        USER_LG="en"
 
         if [ -d "${TEMPLATE}/${USER_LG}" ]; then
             break;
