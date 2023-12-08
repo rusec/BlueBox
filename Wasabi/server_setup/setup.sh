@@ -146,6 +146,44 @@ function install_indexer(){
 
 }
 
+function update_yaml(){
+    local yaml_file=$1
+    local property=$2
+    local new_value=$3
+
+    # Check if the YAML file exists
+    if [ ! -f "$yaml_file" ]; then
+        echo "Error: YAML file not found at $yaml_file"
+        exit 1
+    fi
+
+    # Use awk to find and replace the property value
+    awk -v prop="$property" -v new_val="$new_value" '{
+        if ($1 == prop ":") {
+            sub(/".*"/, "\"" new_val "\"");
+        }
+        print;
+    }' "$yaml_file" > temp.yml && mv temp.yml "$yaml_file"
+
+    echo "Property '$property' in '$yaml_file' has been updated to '$new_value'"
+
+}
+function update_json_property() {
+    local file_path=$1
+    local property=$2
+    local value=$3
+
+    # Update the property in the JSON file using awk
+    awk -v prop="$property" -v val="$value" '
+        {
+            gsub(/^[[:space:]]*("[^"]*")[[:space:]]*:[[:space:]]*("[^"]*"|[0-9]+)[[:space:]]*,*$/, "\"\\1\": \"" val "\",")
+            print
+        }
+    ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+
+    echo "Property '$property' in '$file_path' updated to '$value'."
+}
+
 function config_indexer(){
 
     common_logger "installing certs"
@@ -164,34 +202,154 @@ function config_indexer(){
 
     common_logger "Updating yml file"
 
-    yaml_file="/etc/wazuh-indexer/opensearch.yml"
+    update_yaml "/etc/wazuh-indexer/opensearch.yml" "network.host" $(hostname)
+}
+function manager_install(){
+    
+    common_logger "Starting the Wazuh manager installation."
 
-    # Define the property to be changed
-    property="network.host"
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
+    install_result="${PIPESTATUS[0]}"
 
-    # Define the new value for the property
-    new_value=$(hostname)
 
-    # Check if the YAML file exists
-    if [ ! -f "$yaml_file" ]; then
-        echo "Error: YAML file not found at $yaml_file"
+    wazuh_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-manager)
+
+    if [  "$install_result" != 0  ] || [ -z "${wazuh_installed}" ]; then
+        common_logger -e "Wazuh installation failed."
+        installCommon_rollBack
         exit 1
+    else
+        common_logger "Wazuh manager installation finished."
     fi
-
-    # Use awk to find and replace the property value
-    awk -v prop="$property" -v new_val="$new_value" '{
-        if ($1 == prop ":") {
-            sub(/".*"/, "\"" new_val "\"");
-        }
-        print;
-    }' "$yaml_file" > temp.yml && mv temp.yml "$yaml_file"
-
-    echo "Property '$property' in '$yaml_file' has been updated to '$new_value'"
 
 
 }
+function install_filebeats(){
+    common_logger "Starting the File Beats installation."
+
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/filebeat*.deb"
+    install_result="${PIPESTATUS[0]}"
+
+    filebeat_installed=$(dpkg --get-selections 2>/dev/null | grep filebeat)
+
+    if [  "$install_result" != 0  ] || [ -z "${filebeat_installed}" ]; then
+        common_logger -e "Filebeat installation failed."
+        installCommon_rollBack
+        exit 1
+    else
+        common_logger "Filebeat installation finished."
+    fi
+
+}
+
+function filebeat_config(){
+    common_logger "configuring filebeats"
 
 
+    eval "cp ./wazuh-offline/wazuh-files/filebeat.yml /etc/filebeat/ &&\
+cp ./wazuh-offline/wazuh-files/wazuh-template.json /etc/filebeat/ &&\
+chmod go+r /etc/filebeat/wazuh-template.json"
+
+
+    common_logger "Updating filebeats configs"
+
+    update_json_property "/etc/filebeat/wazuh-template.json" "index.number_of_shards" "1"
+
+    update_yaml "/etc/filebeat/filebeat.yml" "hosts" "[\"127.0.0.1:9200\"]"
+
+    filebeat keystore create
+
+    echo admin | filebeat keystore add username --stdin --force
+    echo admin | filebeat keystore add password --stdin --force
+
+
+    common_logger "Added wazuh module"
+
+    tar -xzf ./wazuh-offline/wazuh-files/wazuh-filebeat-0.3.tar.gz -C /usr/share/filebeat/module
+
+    common_logger "Configuring certs"
+
+    eval "mkdir /etc/filebeat/certs"
+    eval "cp -n wazuh-certificates/$NODE_NAME.pem /etc/filebeat/certs/filebeat.pem"
+    eval "cp -n wazuh-certificates/$NODE_NAME-key.pem /etc/filebeat/certs/filebeat-key.pem"
+    eval "cp wazuh-certificates/root-ca.pem /etc/filebeat/certs/"
+    eval "chmod 500 /etc/filebeat/certs"
+    eval "chmod 400 /etc/filebeat/certs/*"
+    eval "chown -R root:root /etc/filebeat/certs"
+
+
+}
+function dashboard_install() {
+
+    common_logger "Starting Wazuh dashboard installation."
+
+
+    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-dashboard*.deb"
+    install_result="${PIPESTATUS[0]}"
+    dashboard_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-dashboard)
+
+
+    
+    if [  "$install_result" != 0  ] || [ -z "${dashboard_installed}" ]; then
+        common_logger -e "Wazuh dashboard installation failed."
+        installCommon_rollBack
+        exit 1
+    else
+        common_logger "Wazuh dashboard installation finished."
+    fi
+
+}
+function dashboard_configure() {
+
+    eval "mkdir /etc/wazuh-dashboard/certs"
+    eval "cp -n wazuh-certificates/${NODE_NAME}.pem /etc/wazuh-dashboard/certs/dashboard.pem"
+    eval "cp -n wazuh-certificates/${NODE_NAME}-key.pem /etc/wazuh-dashboard/certs/dashboard-key.pem"
+    eval "cp wazuh-certificates/root-ca.pem /etc/wazuh-dashboard/certs/"
+    eval "chmod 500 /etc/wazuh-dashboard/certs"
+    eval "chmod 400 /etc/wazuh-dashboard/certs/*"
+    eval "chown -R wazuh-dashboard:wazuh-dashboard /etc/wazuh-dashboard/certs"
+
+
+    update_yaml "/etc/wazuh-dashboard/opensearch_dashboards.yml" "server.host" "0.0.0.0"
+
+    update_yaml "/etc/wazuh-dashboard/opensearch_dashboards.yml" "opensearch.hosts" "https://localhost:9200"
+
+   
+    common_logger "Wazuh dashboard post-install configuration finished."
+
+}
+
+function installCommon_changePasswords() {
+
+    common_logger -d "Setting Wazuh indexer cluster passwords."
+    eval "/usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh --change-all --admin-user wazuh --admin-password wazuh"
+
+}
+
+function dashboard_initializeAIO() {
+
+    common_logger "Initializing Wazuh dashboard web application."
+    installCommon_getPass "admin"
+    http_code=$(curl -XGET https://localhost:"${http_port}"/status -uadmin:"${u_pass}" -k -w %"{http_code}" -s -o /dev/null)
+    retries=0
+    max_dashboard_initialize_retries=20
+    while [ "${http_code}" -ne "200" ] && [ "${retries}" -lt "${max_dashboard_initialize_retries}" ]
+    do
+        http_code=$(curl -XGET https://localhost:"${http_port}"/status -uadmin:"${u_pass}" -k -w %"{http_code}" -s -o /dev/null)
+        common_logger "Wazuh dashboard web application not yet initialized. Waiting..."
+        retries=$((retries+1))
+        sleep 15
+    done
+    if [ "${http_code}" -eq "200" ]; then
+        common_logger "Wazuh dashboard web application initialized."
+        common_logger -nl "--- Summary ---"
+        common_logger -nl "You can access the web interface https://<wazuh-dashboard-ip>:${http_port}\n    User: admin\n    Password: ${u_pass}"
+    else
+        common_logger -e "Wazuh dashboard installation failed."
+        installCommon_rollBack
+        exit 1
+    fi
+}
 function main(){
 
     check
@@ -202,6 +360,8 @@ function main(){
     tar xf wazuh-offline.tar.gz
 
     common_logger "Depacking Complete, installing indexer" 
+    
+    common_logger "--- Wazuh indexer ---"
 
     install_indexer
 
@@ -211,9 +371,33 @@ function main(){
 
     common_logger "Starting Indexer"
 
+
     installCommon_startService "wazuh-indexer"
 
+    common_logger "--- Wazuh server ---"
 
+    manager_install
+
+    installCommon_startService "wazuh-manager"
+
+
+    common_logger "Installing filebeats"
+
+    install_filebeats
+    filebeat_config
+
+    installCommon_startService "filebeat"
+
+
+    common_logger "--- Wazuh dashboard ---"
+
+    dashboard_install
+    dashboard_configure
+
+    installCommon_startService "wazuh-dashboard"
+
+    installCommon_changePasswords
+    dashboard_initializeAIO
 }
 
 main
