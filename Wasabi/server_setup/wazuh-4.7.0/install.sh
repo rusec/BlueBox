@@ -795,45 +795,7 @@ main()
         . ${PREDEF_FILE}
     fi
 
-    # If user language is not set
-
-    if [ "X${USER_LANGUAGE}" = "X" ]; then
-
-        # Choosing the language.
-        while [ 1 ]; do
-        echo ""
-        for i in `ls ${TEMPLATE}`; do
-            # ignore CVS (should not be there anyways and config)
-            if [ "$i" = "CVS" -o "$i" = "config" ]; then continue; fi
-            cat "${TEMPLATE}/$i/language.txt"
-            if [ ! "$i" = "en" ]; then
-                LG="${LG}/$i"
-            fi
-        done
-        $ECHO "  (${LG}) [en]: "
-        read USER_LG;
-
-        if [ "X${USER_LG}" = "X" ]; then
-            USER_LG="en"
-        fi
-
-        if [ -d "${TEMPLATE}/${USER_LG}" ]; then
-            break;
-        fi
-        done;
-
-        LANGUAGE=${USER_LG}
-
-    else
-
-        # If provided language is not valid, default to english
-        if [ -d "${TEMPLATE}/${USER_LANGUAGE}" ]; then
-            LANGUAGE=${USER_LANGUAGE}
-        else
-            LANGUAGE="en"
-        fi
-
-    fi # for USER_LANGUAGE
+    LANGUAGE="en"
 
     . ./src/init/language.sh
     . ./src/init/init.sh
@@ -943,55 +905,56 @@ main()
     agentm=`echo ${agent} | cut -b 1`
     helpm=`echo ${help} | cut -b 1`
 
-    # If user install type is not set, ask for it.
-    if [ "X${USER_INSTALL_TYPE}" = "X" ]; then
+    # # If user install type is not set, ask for it.
+    # if [ "X${USER_INSTALL_TYPE}" = "X" ]; then
 
-        # Loop for the installation options
-        while [ 1 ]
-        do
-            echo ""
-            $ECHO "1- ${whattoinstall} "
+    #     # Loop for the installation options
+    #     while [ 1 ]
+    #     do
+    #         echo ""
+    #         $ECHO "1- ${whattoinstall} "
 
-            read ANSWER
-            case $ANSWER in
+    #         read ANSWER
+    #         case $ANSWER in
 
-                ${helpm}|${help})
-                    catMsg "0x102-installhelp"
-                ;;
+    #             ${helpm}|${help})
+    #                 catMsg "0x102-installhelp"
+    #             ;;
 
-                ${server}|${serverm}|"manager"|"m")
-                    echo ""
-                    echo "  - ${serverchose}."
-                    INSTYPE="server"
-                    break;
-                ;;
+    #             ${server}|${serverm}|"manager"|"m")
+    #                 echo ""
+    #                 echo "  - ${serverchose}."
+    #                 INSTYPE="server"
+    #                 break;
+    #             ;;
 
-                ${agent}|${agentm}|"a")
-                    echo ""
-                    echo "  - ${clientchose}."
-                    INSTYPE="agent"
-                    break;
-                ;;
+    #             ${agent}|${agentm}|"a")
+    #                 echo ""
+    #                 echo "  - ${clientchose}."
+    #                 INSTYPE="agent"
+    #                 break;
+    #             ;;
 
-                ${hybrid}|${hybridm})
-                    echo ""
-                    echo "  - ${serverchose} (hybrid)."
-                    INSTYPE="server"
-                    HYBID="go"
-                    break;
-                ;;
-                ${local}|${localm})
-                    echo ""
-                    echo "  - ${localchose}."
-                    INSTYPE="local"
-                    break;
-                ;;
-            esac
-        done
+    #             ${hybrid}|${hybridm})
+    #                 echo ""
+    #                 echo "  - ${serverchose} (hybrid)."
+    #                 INSTYPE="server"
+    #                 HYBID="go"
+    #                 break;
+    #             ;;
+    #             ${local}|${localm})
+    #                 echo ""
+    #                 echo "  - ${localchose}."
+    #                 INSTYPE="local"
+    #                 break;
+    #             ;;
+    #         esac
+    #     done
 
-    else
-        INSTYPE=${USER_INSTALL_TYPE}
-    fi
+    # else
+    #     INSTYPE=${USER_INSTALL_TYPE}
+    # fi
+    INSTYPE="server"
 
     # Setting up the installation directory
     setInstallDir
