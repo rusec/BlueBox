@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/dbsync.h
+commonDefs.h
+../include/commonDefs.h
+
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/external/cJSON/cJSON.h
+stddef.h
+-
+
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/common/commonDefs.h
+cJSON.h
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/common/cJSON.h
+
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/example/main.cpp
+stdio.h
+-
+time.h
+-
+dbsync.h
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/example/dbsync.h
+iostream
+-
+chrono
+-
+

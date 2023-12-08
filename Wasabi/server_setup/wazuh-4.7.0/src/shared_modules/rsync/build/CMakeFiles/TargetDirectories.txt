@@ -1,0 +1,8 @@
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/CMakeFiles/rsync.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/testtool/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/testtool/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/testtool/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/rsync/build/testtool/CMakeFiles/rsync_test_tool.dir

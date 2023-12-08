@@ -1,0 +1,8 @@
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/CMakeFiles/sysinfo.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/testtool/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/testtool/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/testtool/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/data_provider/build/testtool/CMakeFiles/sysinfo_test_tool.dir

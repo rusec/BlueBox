@@ -1,0 +1,12 @@
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/CMakeFiles/dbsync.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/example/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/example/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/example/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/example/CMakeFiles/dbsync_example.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/testtool/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/testtool/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/testtool/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/shared_modules/dbsync/build/testtool/CMakeFiles/dbsync_test_tool.dir

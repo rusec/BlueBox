@@ -1,0 +1,12 @@
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/CMakeFiles/wazuh-syscheckd.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/CMakeFiles/fimdb.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/testtool/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/testtool/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/testtool/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/syscheckd/build/src/db/testtool/CMakeFiles/fimdb_test_tool.dir

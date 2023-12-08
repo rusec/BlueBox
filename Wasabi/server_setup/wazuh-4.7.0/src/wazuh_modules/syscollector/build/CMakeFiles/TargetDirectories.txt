@@ -1,0 +1,8 @@
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/CMakeFiles/syscollector.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/testtool/CMakeFiles/rebuild_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/testtool/CMakeFiles/edit_cache.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/testtool/CMakeFiles/test.dir
+/root/BlueBox/Wasabi/server_setup/wazuh-4.7.0/src/wazuh_modules/syscollector/build/testtool/CMakeFiles/syscollector_test_tool.dir
