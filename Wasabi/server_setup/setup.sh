@@ -1,8 +1,26 @@
 NODE_NAME="node-1"
 readonly logfile="/var/log/wazuh-install.log"
 debug=">> ${logfile} 2>&1"
+RPM=0
+DPKG=0
+
+PACKAGE_PATH='./wazuh/*'
 
 
+function check_package_manager() {
+    if command -v rpm &> /dev/null; then
+        echo "RPM package manager is installed."
+        RPM=1
+        PACKAGE_PATH='./wazuh_rpm/*'
+
+    elif command -v dpkg &> /dev/null; then
+        echo "DPKG package manager is installed."
+        DPKG=1
+        PACKAGE_PATH='./wazuh/*'
+    else
+        echo "Neither RPM nor DPKG package manager is found."
+    fi
+}
 function common_logger() {
 
     now=$(date +'%d/%m/%Y %H:%M:%S')
@@ -55,6 +73,11 @@ function check(){
     fi
 
     DIR="./wazuh"
+    if [ -d "$DIR" ]; then
+        # Take action if $DIR exists. #
+        echo "Decompiled check complete in ${DIR}..."
+    fi
+    DIR="./wazuh_rpm"
     if [ -d "$DIR" ]; then
         # Take action if $DIR exists. #
         echo "Decompiled check complete in ${DIR}..."
@@ -130,9 +153,16 @@ function installCommon_startService() {
 
 
 function install_indexer(){
+    
+     if [ "$RPM" == 1 ]; then
+        eval "rpm --import ./wazuh-offline/wazuh-files/GPG-KEY-WAZUH"
+        eval "rpm -ivh ./wazuh-offline/wazuh-packages/wazuh-indexer*.rpm"
+        install_result="${PIPESTATUS[0]}"
+    elif [ "$DPKG" == 1 ]; then
+        eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-indexer*.deb"
+        install_result="${PIPESTATUS[0]}"
+    fi
 
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-indexer*.deb"
-    install_result="${PIPESTATUS[0]}"
     
     indexer_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-indexer)
 
@@ -241,9 +271,17 @@ function manager_install(){
     
     common_logger "Starting the Wazuh manager installation."
 
-    eval "dpkg -i ./lsb-release*.deb"
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
-    install_result="${PIPESTATUS[0]}"
+    if [ "$RPM" == 1 ]; then
+        eval "rpm --import ./wazuh-offline/wazuh-files/GPG-KEY-WAZUH"
+        eval "rpm -ivh ./wazuh-offline/wazuh-packages/wazuh-manager*.rpm"
+        install_result="${PIPESTATUS[0]}"
+    elif [ "$DPKG" == 1 ]; then
+        eval "dpkg -i ./lsb-release*.deb"
+        eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-manager*.deb"
+        install_result="${PIPESTATUS[0]}"
+    fi
+
+   
 
 
     wazuh_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-manager)
@@ -261,7 +299,16 @@ function manager_install(){
 function install_filebeats(){
     common_logger "Starting the File Beats installation."
 
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/filebeat*.deb"
+    if [ "$RPM" == 1 ]; then
+        eval "rpm -ivh ./wazuh-offline/wazuh-packages/filebeat*.rpm"
+        install_result="${PIPESTATUS[0]}"
+    elif [ "$DPKG" == 1 ]; then
+        eval "dpkg -i ./wazuh-offline/wazuh-packages/filebeat*.deb"
+        install_result="${PIPESTATUS[0]}"
+    fi
+
+
+
     install_result="${PIPESTATUS[0]}"
 
     filebeat_installed=$(dpkg --get-selections 2>/dev/null | grep filebeat)
@@ -317,9 +364,16 @@ function dashboard_install() {
 
     common_logger "Starting Wazuh dashboard installation."
 
+    if [ "$RPM" == 1 ]; then
+        eval "rpm --import ./wazuh-offline/wazuh-files/GPG-KEY-WAZUH"
+        eval "rpm -ivh ./wazuh-offline/wazuh-packages/wazuh-dashboard*.rpm"
+        install_result="${PIPESTATUS[0]}"
+    elif [ "$DPKG" == 1 ]; then
+        eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-dashboard*.deb"
+        install_result="${PIPESTATUS[0]}"
+    fi
 
-    eval "dpkg -i ./wazuh-offline/wazuh-packages/wazuh-dashboard*.deb"
-    install_result="${PIPESTATUS[0]}"
+    
     dashboard_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-dashboard)
 
 
@@ -408,10 +462,11 @@ function filebeat_check(){
 function main(){
 
     check
+    check_package_manager
 
     common_logger "Depacking wazuh" 
 
-    cat ./wazuh/* > wazuh-offline.tar.gz
+    cat ${PACKAGE_PATH} > wazuh-offline.tar.gz
     tar xf wazuh-offline.tar.gz
 
     common_logger "Depacking Complete, installing indexer" 
