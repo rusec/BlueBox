@@ -1,19 +1,26 @@
 ## Install 
 
-1. Run Step to depack
+1. **Run step to install wazuh from package**
 
     ```sh
         chmod 700 ./setup.sh
         ./setup.sh
     ```
-    
+    The custom script should config adjust configs to be all in one. 
+
+
+
+2. **Run wazuh update password tool to secure wazuh**
+
+    ```sh
+    /usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh --change-all --admin-user wazuh --admin-password wazuh
+    ```
 
 
 
 
 
-
-After running the custom_install script
+After running the custom_install script if config fails
 
 1. **Edit /etc/wazuh-indexer/opensearch.yml and replace the following values:**
     network.host: Sets the address of this node for both HTTP and transport traffic. The node will bind to this address and will also use it as its publish address. Accepts an IP address or a hostname.

@@ -169,19 +169,51 @@ function update_yaml(){
 
 }
 function update_json_property() {
-    local file_path=$1
-    local property=$2
-    local value=$3
+       if [ "$#" -ne 3 ]; then
+        echo "Usage: update_json_property <json_file_path> <property_path> <new_value>"
+        return 1
+    fi
 
-    # Update the property in the JSON file using awk
-    awk -v prop="$property" -v val="$value" '
-        {
-            gsub(/^[[:space:]]*("[^"]*")[[:space:]]*:[[:space:]]*("[^"]*"|[0-9]+)[[:space:]]*,*$/, "\"\\1\": \"" val "\",")
-            print
+    json_file="$1"
+    property_path="$2"
+    new_value="$3"
+
+    if [ ! -f "$json_file" ]; then
+        echo "Error: JSON file not found at '$json_file'"
+        return 1
+    fi
+
+    # Read the JSON file into a variable
+    json_content=$(cat "$json_file")
+
+    # Use awk to update the JSON property
+    updated_json=$(echo "$json_content" | awk -v path="$property_path" -v value="$new_value" '
+        BEGIN {
+            FS = OFS = "\"";
+            RS = ORS = "\n";
+            path_found = 0;
         }
-    ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
 
-    echo "Property '$property' in '$file_path' updated to '$value'."
+        {
+            for (i = 1; i <= NF; i += 2) {
+                if ($i == path) {
+                    path_found = 1;
+                }
+
+                if (path_found && $i == "") {
+                    $0 = "\"" value "\"";
+                    path_found = 0;
+                }
+            }
+            print $0;
+        }
+    ')
+
+    # Write the updated JSON back to the file
+    echo "$updated_json" > "$json_file"
+
+    echo "Property '$property_path' in '$json_file' updated to '$new_value'"
+
 }
 
 function config_indexer(){
@@ -202,7 +234,8 @@ function config_indexer(){
 
     common_logger "Updating yml file"
 
-    update_yaml "/etc/wazuh-indexer/opensearch.yml" "network.host" $(hostname)
+    update_yaml "/etc/wazuh-indexer/opensearch.yml" "network.host"  "127.0.0.1"
+
 }
 function manager_install(){
     
@@ -256,7 +289,7 @@ chmod go+r /etc/filebeat/wazuh-template.json"
 
     update_json_property "/etc/filebeat/wazuh-template.json" "index.number_of_shards" "1"
 
-    update_yaml "/etc/filebeat/filebeat.yml" "hosts" "[\"127.0.0.1:9200\"]"
+    update_yaml "/etc/filebeat/filebeat.yml" "hosts" ["127.0.0.1:9200"]
 
     filebeat keystore create
 
@@ -313,7 +346,7 @@ function dashboard_configure() {
 
     update_yaml "/etc/wazuh-dashboard/opensearch_dashboards.yml" "server.host" "0.0.0.0"
 
-    update_yaml "/etc/wazuh-dashboard/opensearch_dashboards.yml" "opensearch.hosts" "https://localhost:9200"
+    update_yaml "/etc/wazuh-dashboard/opensearch_dashboards.yml" "opensearch.hosts" "https://127.0.0.1:9200"
 
    
     common_logger "Wazuh dashboard post-install configuration finished."
@@ -328,6 +361,9 @@ function installCommon_changePasswords() {
 }
 
 function dashboard_initializeAIO() {
+
+    u_pass="admin"
+    http_port='443'
 
     common_logger "Initializing Wazuh dashboard web application."
     installCommon_getPass "admin"
@@ -351,6 +387,24 @@ function dashboard_initializeAIO() {
         exit 1
     fi
 }
+function indexer_post_config(){
+    eval "/usr/share/wazuh-indexer/bin/indexer-security-init.sh"
+
+
+    eval "curl -XGET https://localhost:9200 -u admin:admin -k"
+
+}
+
+function filebeat_check(){
+    eval "filebeat test output"
+
+
+    eval "curl -k -u admin:admin \"https://localhost:9200/_template/wazuh?pretty&filter_path=wazuh.settings.index.number_of_shards\""
+
+
+}
+
+
 function main(){
 
     check
@@ -375,6 +429,9 @@ function main(){
 
     installCommon_startService "wazuh-indexer"
 
+    indexer_post_config
+
+
     common_logger "--- Wazuh server ---"
 
     manager_install
@@ -388,7 +445,9 @@ function main(){
     filebeat_config
 
     installCommon_startService "filebeat"
+    
 
+    filebeat_check
 
     common_logger "--- Wazuh dashboard ---"
 
