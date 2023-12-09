@@ -151,7 +151,21 @@ function installCommon_startService() {
 
 }
 
+function common_checkInstalled(){
+    if [ "$RPM" == 1 ]; then
+        indexer_installed=$(rpm -q wazuh-indexer 2>/dev/null | grep wazuh-indexer)
+        wazuh_installed=$(rpm -q wazuh-manager 2>/dev/null | grep wazuh-manager)
+        filebeat_installed=$(rpm -q filebeat 2>/dev/null | grep filebeat)
+        dashboard_installed=$(rpm -q wazuh-dashboard 2>/dev/null | grep wazuh-dashboard)
 
+    elif [ "$DPKG" == 1 ]; then
+        indexer_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-indexer)
+        wazuh_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-manager)
+        filebeat_installed=$(dpkg --get-selections 2>/dev/null | grep filebeat)
+        dashboard_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-dashboard)
+
+    fi
+}
 function install_indexer(){
     
      if [ "$RPM" == 1 ]; then
@@ -163,8 +177,7 @@ function install_indexer(){
         install_result="${PIPESTATUS[0]}"
     fi
 
-    
-    indexer_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-indexer)
+    common_checkInstalled    
 
     if [  "$install_result" != 0  ] || [ -z "${indexer_installed}" ]; then
         common_logger -e "Wazuh indexer installation failed."
@@ -284,7 +297,7 @@ function manager_install(){
    
 
 
-    wazuh_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-manager)
+    common_checkInstalled
 
     if [  "$install_result" != 0  ] || [ -z "${wazuh_installed}" ]; then
         common_logger -e "Wazuh installation failed."
@@ -311,7 +324,7 @@ function install_filebeats(){
 
     install_result="${PIPESTATUS[0]}"
 
-    filebeat_installed=$(dpkg --get-selections 2>/dev/null | grep filebeat)
+    common_checkInstalled
 
     if [  "$install_result" != 0  ] || [ -z "${filebeat_installed}" ]; then
         common_logger -e "Filebeat installation failed."
@@ -374,8 +387,7 @@ function dashboard_install() {
     fi
 
     
-    dashboard_installed=$(dpkg --get-selections 2>/dev/null | grep wazuh-dashboard)
-
+    common_checkInstalled
 
     
     if [  "$install_result" != 0  ] || [ -z "${dashboard_installed}" ]; then
