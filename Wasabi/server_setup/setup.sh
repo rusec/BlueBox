@@ -289,7 +289,7 @@ chmod go+r /etc/filebeat/wazuh-template.json"
 
     update_json_property "/etc/filebeat/wazuh-template.json" "index.number_of_shards" "1"
 
-    update_yaml "/etc/filebeat/filebeat.yml" "hosts" ["127.0.0.1:9200"]
+    update_yaml "/etc/filebeat/filebeat.yml" "hosts" "127.0.0.1:9200"
 
     filebeat keystore create
 
